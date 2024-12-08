@@ -1,0 +1,25 @@
+.homepage__container {
+    padding: 0 10%;
+}
+
+.homepage__header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 40px;
+    align-items: center;
+}
+
+.homepage__header-title {
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.homepage__header-login-logout {
+    font-size: 1rem;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.homepage__header-login-logout:hover {
+    color: #005bb5;
+}
