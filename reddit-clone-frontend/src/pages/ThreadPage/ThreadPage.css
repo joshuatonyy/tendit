@@ -1,0 +1,77 @@
+.threadpage__container {
+    padding: 0 10%;
+  }
+  
+  .threadpage__header {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .threadpage__header-title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    text-align: start;
+  }
+  
+  .threadpage__post-body {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    /* max-width: 600px; */
+    margin: 0 auto;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .threadpage__post-input {
+    /* width: 100%; */
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    outline: none;
+  }
+  
+  .threadpage__post-input:focus {
+    border-color: #0079d3;
+    box-shadow: 0 0 4px rgba(0, 121, 211, 0.2);
+  }
+  
+  .threadpage__post-input--title {
+    font-size: 18px;
+    font-weight: bold;
+  }
+  
+  .threadpage__post-input--content {
+    min-height: 150px;
+    resize: vertical;
+  }
+
+  .threadpage__submit-container {
+    display: flex;
+    justify-content: end;
+    width: 100%;
+    margin-bottom: 10px;
+  }
+  
+  .threadpage__submit-post {
+    flex: 1;
+    background: #007aff;
+    color: #fff;
+    text-align: center;
+    padding: 10px;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    font-weight: 600;
+    max-width: 100px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .threadpage__submit-post:hover {
+    background: #005bb5;
+  }
+  

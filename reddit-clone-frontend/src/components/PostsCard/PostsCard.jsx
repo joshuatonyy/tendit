@@ -2,9 +2,9 @@ import React from "react";
 import "./PostsCard.css";
 import { FaThumbsUp, FaThumbsDown } from "react-icons/fa";
 
-export const PostsCard = () => {
+export const PostsCard = ({ handleClick = () => {} }) => {
   return (
-    <div className="postscard__container">
+    <div className="postscard__container" onClick={handleClick}>
       <div className="postscard__card-details">
         <p className="postscard__username">@ten10</p>
         <p className="postscard__createdate">Today</p>
