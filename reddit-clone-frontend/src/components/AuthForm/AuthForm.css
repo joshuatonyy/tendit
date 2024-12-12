@@ -88,6 +88,13 @@
   background: #005bb5;
 }
 
+.authform__success-message {
+  color: green;
+  font-size: 14px;
+  margin-top: 10px;
+  text-align: center;
+}
+
 @media (max-width: 480px) {
   .authform__container {
     width: 90%;
