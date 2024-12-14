@@ -5,6 +5,7 @@ import (
 	"reddit-clone-backend/cmd/router"
 	"reddit-clone-backend/db"
 	"reddit-clone-backend/db/sqlc"
+	"reddit-clone-backend/internal/post"
 	"reddit-clone-backend/internal/user"
 )
 
@@ -20,7 +21,11 @@ func main() {
 	userSvc := user.NewService(userRep)
 	userHandler := user.NewHandler(userSvc)
 
+	postRep := post.NewRepository(queries)
+	postSvc := post.NewService(postRep)
+	postHandler := post.NewHandler(postSvc)
 
-	router.InitRouter(userHandler)
+
+	router.InitRouter(userHandler, postHandler)
 	router.Start("0.0.0.0:8080")
 }

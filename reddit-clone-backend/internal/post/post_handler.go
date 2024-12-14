@@ -19,7 +19,7 @@ func NewHandler(s Service) *Handler {
 func (h *Handler) CreatePost(c *gin.Context) {
 	var req sqlc.CreatePostParams
 	userID, exists := c.Get("user_id")
-	if(!exists) {
+	if !exists {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "User ID not found in token"})
 		return
 	}
@@ -40,7 +40,7 @@ func (h *Handler) CreatePost(c *gin.Context) {
 		return
 	}
 
-	if err:= c.ShouldBindJSON(&req); err != nil {
+	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
@@ -68,11 +68,52 @@ func (h *Handler) UpdatePost(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
+	req.PostID = postID
 
-
-
-	if err := h.Service.UpdatePost(c.Request.Context(), &req); err != nil {
+	res, err := h.Service.UpdatePost(c.Request.Context(), &req)
+	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
+
+	c.JSON(http.StatusOK, gin.H{"data": res})
+}
+
+func (h *Handler) GetAllPosts(c *gin.Context) {
+	posts, err := h.Service.GetAllPosts(c.Request.Context())
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"data": posts})
+}
+
+func (h *Handler) GetPostsByUserID(c *gin.Context) {
+	userID, err := strconv.ParseInt(c.Param("user_id"), 10, 64)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid User ID"})
+		return
+	}
+
+	posts, err := h.Service.GetPostsByUserID(c.Request.Context(), userID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"data": posts})
+}
+
+func (h *Handler) GetPostByPostID(c *gin.Context) {
+	postID, err := strconv.ParseInt(c.Param("post_id"), 10, 64)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid Post ID"})
+		return
+	}
+
+	post, err := h.Service.GetPostByPostID(c.Request.Context(), postID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"data": post})
 }

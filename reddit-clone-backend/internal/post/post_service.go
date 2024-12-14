@@ -2,7 +2,7 @@ package post
 
 import (
 	"context"
-	"database/sql"
+	// "database/sql"
 	"reddit-clone-backend/db/sqlc"
 )
 
@@ -14,11 +14,11 @@ func NewService(repo Repository) Service {
 	return &service{repo: repo}
 }
 
-func (s *service) CreatePost(ctx context.Context, req *CreatePostReq) (*PostResponse, error) {
+func (s *service) CreatePost(ctx context.Context, req *sqlc.CreatePostParams) (*PostResponse, error) {
 	newPost, err := s.repo.CreatePost(ctx, sqlc.CreatePostParams{
 		UserID:      req.UserID,
 		PostTitle:   req.PostTitle,
-		PostContent: sql.NullString{String: req.PostContent, Valid: true},
+		PostContent: req.PostContent,
 	})
 	if err != nil {
 		return nil, err

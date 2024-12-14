@@ -1,7 +1,9 @@
 package router
 
 import (
+	"reddit-clone-backend/internal/post"
 	"reddit-clone-backend/internal/user"
+	"reddit-clone-backend/middleware"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -9,7 +11,7 @@ import (
 
 var r *gin.Engine
 
-func InitRouter(userHandler *user.Handler) {
+func InitRouter(userHandler *user.Handler, postHandler *post.Handler) {
 	r = gin.Default()
 
 	config := cors.Config{
@@ -25,6 +27,15 @@ func InitRouter(userHandler *user.Handler) {
 	r.POST("/signup", userHandler.CreateUser)
 	r.POST("login", userHandler.Login)
 	r.GET("/logout", userHandler.Logout)
+
+	postRoutes := r.Group("/posts", middleware.JWTAuthMiddleware())
+	{
+		postRoutes.POST("/", postHandler.CreatePost)
+		postRoutes.GET("/", postHandler.GetAllPosts)
+		postRoutes.GET("/user/:userID", postHandler.GetPostsByUserID) 
+		postRoutes.GET("/:postID", postHandler.GetPostByPostID)
+		postRoutes.PATCH("/:postID", postHandler.UpdatePost) 
+	}
 }
 
 func Start(addr string) error {
