@@ -1,6 +1,7 @@
 package router
 
 import (
+	"reddit-clone-backend/internal/comment"
 	"reddit-clone-backend/internal/post"
 	"reddit-clone-backend/internal/user"
 	"reddit-clone-backend/middleware"
@@ -11,7 +12,7 @@ import (
 
 var r *gin.Engine
 
-func InitRouter(userHandler *user.Handler, postHandler *post.Handler) {
+func InitRouter(userHandler *user.Handler, postHandler *post.Handler, commentHandler *comment.Handler) {
 	r = gin.Default()
 
 	config := cors.Config{
@@ -27,15 +28,24 @@ func InitRouter(userHandler *user.Handler, postHandler *post.Handler) {
 	r.POST("/signup", userHandler.CreateUser)
 	r.POST("login", userHandler.Login)
 	r.GET("/logout", userHandler.Logout)
+	r.GET("/get-all-posts", postHandler.GetAllPosts)
+	r.GET("/get-all-comments", commentHandler.GetAllComments)
 
 	postRoutes := r.Group("/posts", middleware.JWTAuthMiddleware())
 	{
 		postRoutes.POST("/", postHandler.CreatePost)
-		postRoutes.GET("/", postHandler.GetAllPosts)
+		
 		postRoutes.GET("/user/:userID", postHandler.GetPostsByUserID) 
 		postRoutes.GET("/:postID", postHandler.GetPostByPostID)
 		postRoutes.PATCH("/:postID", postHandler.UpdatePost) 
 	}
+
+	commentRoutes := r.Group("/comments", middleware.JWTAuthMiddleware())
+	{
+		commentRoutes.POST("/", commentHandler.CreateComment)
+	}
+
+	
 }
 
 func Start(addr string) error {
