@@ -4,6 +4,17 @@
 
 package sqlc
 
+import (
+	"database/sql"
+)
+
+type Post struct {
+	PostID      int64          `json:"post_id"`
+	UserID      int64          `json:"user_id"`
+	PostTitle   string         `json:"post_title"`
+	PostContent sql.NullString `json:"post_content"`
+}
+
 type User struct {
 	ID       int64  `json:"id"`
 	Username string `json:"username"`
