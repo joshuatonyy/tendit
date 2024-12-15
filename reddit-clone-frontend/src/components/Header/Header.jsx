@@ -3,7 +3,11 @@ import { Outlet, Link, Navigate, useNavigate } from "react-router-dom";
 import logo from "../../assets/tendit_logo.png";
 import "./Header.css";
 
-export const Header = ({ onLogin = () => {}, onLogout = () => {} }) => {
+export const Header = ({
+  onLogin = () => {},
+  onLogout = () => {},
+  isOnCreate,
+}) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const navigate = useNavigate();
@@ -20,15 +24,19 @@ export const Header = ({ onLogin = () => {}, onLogout = () => {} }) => {
       localStorage.removeItem("username");
       localStorage.removeItem("userID");
       setIsLoggedIn(false);
-      navigate(0);
+      navigate("/");
     } else {
       onLogin();
     }
   };
 
   const handleCreate = () => {
+    navigate("/thread")
+  };
 
-  }
+  const handleMoveToPost = () => {
+    navigate("/")
+  };
 
   return (
     <div className="header__header">
@@ -38,7 +46,9 @@ export const Header = ({ onLogin = () => {}, onLogout = () => {} }) => {
       </div>
       <div className="header__header-right">
         {isLoggedIn && (
-          <p className="header__header-create-post" onClick={handleCreate}>Create</p>
+          <p className="header__header-create-post" onClick={ isOnCreate ? handleMoveToPost : handleCreate}>
+            {isOnCreate ? "Posts" : "Create"}
+          </p>
         )}
         <p className="header__header-login-logout" onClick={handleLoginLogout}>
           {isLoggedIn ? "Logout" : "Login"}

@@ -4,6 +4,7 @@ import { AuthForm } from "../../components/AuthForm/AuthForm";
 import PostsCard from "../../components/PostsCard/PostsCard";
 import Header from "../../components/Header/Header";
 import { useGetAllPosts } from "../../usePost";
+import { Outlet, Link, Navigate, useNavigate } from "react-router-dom";
 
 export const HomePage = () => {
   const [isAuthFormVisible, setIsAuthFormVisible] = useState(false);
@@ -12,6 +13,8 @@ export const HomePage = () => {
   const [loggedInUsername, setLoggedInUsername] = useState("");
 
   const getAllPostsMutation = useGetAllPosts();
+
+  const navigate = useNavigate();
 
   const { data: posts, isLoading, isError, error } = useGetAllPosts();
 
@@ -42,7 +45,9 @@ export const HomePage = () => {
             <PostsCard
               key={post.post_id}
               post={post}
-              handleClick={() => {}}
+              handleClick={() => {
+                navigate(`/post/${post.post_id}`)
+              }}
             />
           ))
         )}

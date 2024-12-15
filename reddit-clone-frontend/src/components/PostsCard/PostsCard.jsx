@@ -37,23 +37,23 @@ import React from "react";
 import "./PostsCard.css";
 import { FaThumbsUp, FaThumbsDown } from "react-icons/fa";
 
-export const PostsCard = ({ post, handleClick = () => {} }) => {
+export const PostsCard = ({ post, handleClick = () => {}, username = "anon" }) => {
   return (
     <div className="postscard__container" onClick={() => handleClick(post)}>
       <div className="postscard__card-details">
-        <p className="postscard__username">@{post.username}</p>
-        <p className="postscard__createdate">{post.createdAt}</p>
+        <p className="postscard__username">@{username}</p>
+        {/* <p className="postscard__createdate">{post.createdAt}</p> */}
       </div>
-      <div className="postscard__title">{post.title}</div>
-      <div className="postscard__content">{post.content}</div>
-      <div className="postscard__actions">
+      <div className="postscard__title">{post.post_title}</div>
+      <div className="postscard__content">{post.post_content}</div>
+      {/* <div className="postscard__actions">
         <button className="postscard__icon-button">
           <FaThumbsUp className="postscard__icon" />
         </button>
         <button className="postscard__icon-button">
           <FaThumbsDown className="postscard__icon" />
         </button>
-      </div>
+      </div> */}
     </div>
   );
 };

@@ -31,6 +31,7 @@ export const loginApi = async (email, password) => {
 export const logoutApi = async () => {
   try {
     const response = await apiClient.get("/logout");
+    localStorage.clear();
     return response.data;
   } catch (error) {
     console.error("Logout error:", error.response?.data || error.message);
@@ -59,3 +60,25 @@ export const getAllPostsApi = async () => {
     throw error;
   }
 };
+
+// Create New Contact
+export const createPostApi = async (postData) => {
+  try {
+    const response = await apiClient.post("/posts/", postData);
+    return response.data;
+  } catch (error) {
+    console.error("Create post error:", error.response?.data || error.message);
+    throw error;
+  }
+}
+
+// Get Post by Post ID
+export const getPostByPostIDApi = async (postID) => {
+  try {
+    const response = await apiClient.get(`/posts/${postID}`);
+    return response.data["data"];
+  } catch (error) {
+    console.error("Get Post error:", error.response?.data || error.message);
+    throw error;
+  }
+}

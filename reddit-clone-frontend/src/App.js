@@ -12,7 +12,7 @@ function App() {
       <Routes>
         <Route path='/' element={<HomePage />}/>
         <Route path='/thread' element={<ThreadPage />}/>
-        <Route path='/post' element={<PostPage />}/>
+        <Route path='/post/:postID' element={<PostPage />}/>
       </Routes>
     </BrowserRouter>
   );

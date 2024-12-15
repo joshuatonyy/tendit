@@ -4,10 +4,14 @@ import Header from "../../components/Header/Header";
 import AppleTextfield from "../../components/AppleTextfield/AppleTextfield";
 import { AuthForm } from "../../components/AuthForm/AuthForm";
 import { FaThumbsUp, FaThumbsDown } from "react-icons/fa";
+import { useCreatePost } from "../../usePost";
 
 export const ThreadPage = () => {
   const [titleValue, setTitleValue] = useState("");
+  const [contentValue, setContentValue] = useState("");
   const [isAuthFormVisible, setIsAuthFormVisible] = useState(false);
+
+  const { mutate: createPost, isLoading } = useCreatePost();
 
   const handleLogin = () => {
     setIsAuthFormVisible(true);
@@ -17,11 +21,30 @@ export const ThreadPage = () => {
     setIsAuthFormVisible(false);
   };
 
-  const handlePost = () => {};
+  const handlePost = () => {
+    if (!titleValue.trim() || !contentValue.trim()) {
+      alert("Please fill in both the title and content.");
+      return;
+    }
+    const userID = localStorage.getItem("userID");
+    createPost(
+      { post_title: titleValue, post_content: contentValue, user_id: userID},
+      {
+        onSuccess: () => {
+          setTitleValue("");
+          setContentValue("");
+          alert("Post created successfully!");
+        },
+        onError: (error) => {
+          alert("Error creating post: " + error.message);
+        },
+      }
+    );
+  };
 
   return (
     <div className="threadpage__container">
-      <Header onLogin={handleLogin} />
+      <Header onLogin={handleLogin} isOnCreate={true} />
 
       <div className="threadpage__header">
         <p className="threadpage__header-title">Create a post</p>
@@ -40,16 +63,9 @@ export const ThreadPage = () => {
         <textarea
           className="threadpage__post-input threadpage__post-input--content"
           placeholder="Share your thoughts here...."
+          value={contentValue}
+          onChange={(e) => setContentValue(e.target.value)}
         />
-
-        <div className="postscard__actions">
-          <button className="postscard__icon-button">
-            <FaThumbsUp className="postscard__icon" />
-          </button>
-          <button className="postscard__icon-button">
-            <FaThumbsDown className="postscard__icon" />
-          </button>
-        </div>
 
         <div className="threadpage__submit-container">
           <div className="threadpage__submit-post" onClick={handlePost}>
