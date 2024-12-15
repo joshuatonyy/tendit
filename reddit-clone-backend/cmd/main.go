@@ -6,6 +6,7 @@ import (
 	"reddit-clone-backend/db"
 	"reddit-clone-backend/db/sqlc"
 	"reddit-clone-backend/internal/comment"
+	"reddit-clone-backend/internal/like"
 	"reddit-clone-backend/internal/post"
 	"reddit-clone-backend/internal/user"
 )
@@ -30,7 +31,10 @@ func main() {
 	commentSvc := comment.NewService(commentRep)
 	commentHandler := comment.NewHandler(commentSvc)
 
+	likeRepository := like.NewRepository(queries)
+	likeSvc := like.NewService(likeRepository)
+	likeHandler := like.NewHandler(likeSvc)
 
-	router.InitRouter(userHandler, postHandler, commentHandler)
+	router.InitRouter(userHandler, postHandler, commentHandler, likeHandler)
 	router.Start("0.0.0.0:8080")
 }

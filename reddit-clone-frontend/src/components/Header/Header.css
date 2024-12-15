@@ -22,12 +22,20 @@
     font-weight: bold;
 }
 
-.header__header-login-logout {
+.header__header-right {
+    display: flex;
+    align-items: center;
+    gap: 20px; 
+}
+
+.header__header-login-logout, .header__header-create-post {
     font-size: 1rem;
     cursor: pointer;
     transition: color 0.3s;
 }
 
-.header__header-login-logout:hover {
+.header__header-login-logout:hover, .header__header-create-post:hover {
     color: #005bb5;
 }
+
+

@@ -1,8 +1,7 @@
-package post
+package like
 
 import (
 	"net/http"
-	"reddit-clone-backend/db/sqlc"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -16,8 +15,7 @@ func NewHandler(s Service) *Handler {
 	return &Handler{s}
 }
 
-func (h *Handler) CreatePost(c *gin.Context) {
-	var req sqlc.CreatePostParams
+func (h *Handler) CreateLike(c *gin.Context) {
 	userID, exists := c.Get("user_id")
 	if !exists {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "User ID not found in token"})
@@ -40,14 +38,13 @@ func (h *Handler) CreatePost(c *gin.Context) {
 		return
 	}
 
-	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	postID, err := strconv.ParseInt(c.Param("post_id"), 10, 64)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid Post ID"})
 		return
 	}
 
-	req.UserID = userIDInt
-
-	res, err := h.Service.CreatePost(c.Request.Context(), &req)
+	res, err := h.Service.CreateLike(c.Request.Context(), postID, userIDInt)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -56,40 +53,16 @@ func (h *Handler) CreatePost(c *gin.Context) {
 	c.JSON(http.StatusOK, res)
 }
 
-func (h *Handler) UpdatePost(c *gin.Context) {
-	postID, err := strconv.ParseInt(c.Param("post_id"), 10, 64)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid Post ID"})
-		return
-	}
-
-	var req sqlc.EditPostParams
-	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-	req.PostID = postID
-
-	res, err := h.Service.UpdatePost(c.Request.Context(), &req)
+func (h *Handler) GetAllLikes(c *gin.Context) {
+	likes, err := h.Service.GetAllLikes(c.Request.Context())
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-
-	c.JSON(http.StatusOK, gin.H{"data": res})
+	c.JSON(http.StatusOK, gin.H{"data": likes})
 }
 
-func (h *Handler) GetAllPosts(c *gin.Context) {
-	posts, err := h.Service.GetAllPosts(c.Request.Context())
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
-	c.JSON(http.StatusOK, gin.H{"data": posts})
-}
-
-func (h *Handler) GetPostsByUserID(c *gin.Context) {
-	var req sqlc.CreatePostParams
+func (h *Handler) GetAllLikesByUserID(c *gin.Context) {
 	userID, exists := c.Get("user_id")
 	if !exists {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "User ID not found in token"})
@@ -112,30 +85,10 @@ func (h *Handler) GetPostsByUserID(c *gin.Context) {
 		return
 	}
 
-	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
-	posts, err := h.Service.GetPostsByUserID(c.Request.Context(), userIDInt)
+	likes, err := h.Service.GetAllLikesByUserID(c.Request.Context(), userIDInt)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"data": posts})
-}
-
-func (h *Handler) GetPostByPostID(c *gin.Context) {
-	postID, err := strconv.ParseInt(c.Param("post_id"), 10, 64)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid Post ID"})
-		return
-	}
-
-	post, err := h.Service.GetPostByPostID(c.Request.Context(), postID)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
-	c.JSON(http.StatusOK, gin.H{"data": post})
+	c.JSON(http.StatusOK, gin.H{"data": likes})
 }

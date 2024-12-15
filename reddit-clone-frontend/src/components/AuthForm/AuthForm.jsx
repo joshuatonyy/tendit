@@ -17,6 +17,8 @@ export const AuthForm = ({ onClose }) => {
   const loginMutation = useLogin();
   const registerMutation = useRegister();
 
+  const navigate = useNavigate();
+
   const handleAuth = async () => {
     try {
       if (isRegisterMode) {
@@ -27,6 +29,9 @@ export const AuthForm = ({ onClose }) => {
         });
         setErrorMessage("");
         setSuccessMessage("Register success!");
+        setEmailValue("");
+        setPasswordValue("");
+        setIsRegisterMode(false);
       } else {
         await loginMutation.mutateAsync({
           email: emailValue,
@@ -34,8 +39,11 @@ export const AuthForm = ({ onClose }) => {
         });
         setErrorMessage("");
         setSuccessMessage("Login success!");
+
+        navigate(0);
       }
     } catch (error) {
+      setSuccessMessage("")
       setErrorMessage(error.response?.data?.message || "An error occurred");
     }
   };
