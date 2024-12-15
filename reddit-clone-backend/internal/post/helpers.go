@@ -26,7 +26,7 @@ func convertToPostResponses(posts []sqlc.Post) []PostResponse {
 			PostID:      post.PostID,
 			UserID:      post.UserID,
 			PostTitle:   post.PostTitle,
-			PostContent: getStringPointer(post.PostContent),
+			PostContent: post.PostContent,
 		}
 	}
 	return responses

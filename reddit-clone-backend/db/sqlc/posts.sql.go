@@ -7,7 +7,6 @@ package sqlc
 
 import (
 	"context"
-	"database/sql"
 )
 
 const createPost = `-- name: CreatePost :one
@@ -17,9 +16,9 @@ RETURNING post_id
 `
 
 type CreatePostParams struct {
-	UserID      int64          `json:"user_id"`
-	PostTitle   string         `json:"post_title"`
-	PostContent sql.NullString `json:"post_content"`
+	UserID      int64  `json:"user_id"`
+	PostTitle   string `json:"post_title"`
+	PostContent string `json:"post_content"`
 }
 
 func (q *Queries) CreatePost(ctx context.Context, arg CreatePostParams) (int64, error) {
@@ -37,9 +36,9 @@ RETURNING post_id
 `
 
 type EditPostParams struct {
-	PostTitle   string         `json:"post_title"`
-	PostContent sql.NullString `json:"post_content"`
-	PostID      int64          `json:"post_id"`
+	PostTitle   string `json:"post_title"`
+	PostContent string `json:"post_content"`
+	PostID      int64  `json:"post_id"`
 }
 
 func (q *Queries) EditPost(ctx context.Context, arg EditPostParams) (int64, error) {

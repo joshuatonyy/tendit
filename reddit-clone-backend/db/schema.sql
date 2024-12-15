@@ -7,9 +7,9 @@ CREATE TABLE "users" (
 
 CREATE TABLE "posts" (
     "post_id" bigserial PRIMARY KEY,
-    "user_id" bigserial NOT NULL,
+    "user_id" BIGINT NOT NULL,
     "post_title" varchar NOT NULL,
-    "post_content" varchar,
+    "post_content" varchar NOT NULL,
     
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );

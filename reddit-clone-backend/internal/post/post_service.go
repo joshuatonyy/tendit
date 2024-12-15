@@ -15,6 +15,9 @@ func NewService(repo Repository) Service {
 }
 
 func (s *service) CreatePost(ctx context.Context, req *sqlc.CreatePostParams) (*PostResponse, error) {
+
+	
+
 	newPost, err := s.repo.CreatePost(ctx, sqlc.CreatePostParams{
 		UserID:      req.UserID,
 		PostTitle:   req.PostTitle,
@@ -27,7 +30,7 @@ func (s *service) CreatePost(ctx context.Context, req *sqlc.CreatePostParams) (*
 		PostID:      newPost.PostID,
 		UserID:      newPost.UserID,
 		PostTitle:   newPost.PostTitle,
-		PostContent: &newPost.PostContent.String,
+		PostContent: newPost.PostContent,
 	}, nil
 }
 
@@ -44,7 +47,7 @@ func (s *service) UpdatePost(ctx context.Context, req *sqlc.EditPostParams) (*Po
 		PostID:      updatedPost.PostID,
 		UserID:      updatedPost.UserID,
 		PostTitle:   updatedPost.PostTitle,
-		PostContent: getStringPointer(updatedPost.PostContent),
+		PostContent: updatedPost.PostContent,
 	}, nil
 }
 
@@ -73,6 +76,6 @@ func (s *service) GetPostByPostID(ctx context.Context, postID int64) (*PostRespo
 		PostID:      post.PostID,
 		UserID:      post.UserID,
 		PostTitle:   post.PostTitle,
-		PostContent: getStringPointer(post.PostContent),
+		PostContent: post.PostContent,
 	}, nil
 }

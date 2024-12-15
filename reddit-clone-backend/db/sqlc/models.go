@@ -4,10 +4,6 @@
 
 package sqlc
 
-import (
-	"database/sql"
-)
-
 type Comment struct {
 	CommentID      int64  `json:"comment_id"`
 	PostID         int64  `json:"post_id"`
@@ -21,10 +17,10 @@ type Like struct {
 }
 
 type Post struct {
-	PostID      int64          `json:"post_id"`
-	UserID      int64          `json:"user_id"`
-	PostTitle   string         `json:"post_title"`
-	PostContent sql.NullString `json:"post_content"`
+	PostID      int64  `json:"post_id"`
+	UserID      int64  `json:"user_id"`
+	PostTitle   string `json:"post_title"`
+	PostContent string `json:"post_content"`
 }
 
 type User struct {

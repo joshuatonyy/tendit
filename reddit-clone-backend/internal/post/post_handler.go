@@ -17,37 +17,27 @@ func NewHandler(s Service) *Handler {
 }
 
 func (h *Handler) CreatePost(c *gin.Context) {
-	var req sqlc.CreatePostParams
-	userID, exists := c.Get("user_id")
-	if !exists {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "User ID not found in token"})
-		return
-	}
-
-	var userIDInt int64
-	switch v := userID.(type) {
-	case string:
-		id, err := strconv.ParseInt(v, 10, 64)
-		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "Invalid user ID format"})
-			return
-		}
-		userIDInt = id
-	case float64:
-		userIDInt = int64(v)
-	default:
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Unexpected user ID type"})
-		return
-	}
+	var req CreatePostFrontend
 
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	req.UserID = userIDInt
+	userID, err := strconv.ParseInt(req.UserID, 10, 64)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid user_id format"})
+		return
+	}
 
-	res, err := h.Service.CreatePost(c.Request.Context(), &req)
+	// Map to sqlc.CreatePostParams
+	newReq := sqlc.CreatePostParams{
+		UserID:      userID,
+		PostTitle:   req.PostTitle,
+		PostContent: req.PostContent,
+	}
+
+	res, err := h.Service.CreatePost(c.Request.Context(), &newReq)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -90,7 +80,7 @@ func (h *Handler) GetAllPosts(c *gin.Context) {
 
 func (h *Handler) GetPostsByUserID(c *gin.Context) {
 	var req sqlc.CreatePostParams
-	userID, exists := c.Get("user_id")
+	userID, exists := c.Get("userID")
 	if !exists {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "User ID not found in token"})
 		return
@@ -126,7 +116,7 @@ func (h *Handler) GetPostsByUserID(c *gin.Context) {
 }
 
 func (h *Handler) GetPostByPostID(c *gin.Context) {
-	postID, err := strconv.ParseInt(c.Param("post_id"), 10, 64)
+	postID, err := strconv.ParseInt(c.Param("postID"), 10, 64)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid Post ID"})
 		return

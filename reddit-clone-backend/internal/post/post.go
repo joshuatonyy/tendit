@@ -20,8 +20,15 @@ type PostResponse struct {
 	PostID      int64   `json:"post_id"`
 	UserID      int64   `json:"user_id"`
 	PostTitle   string  `json:"post_title"`
-	PostContent *string `json:"post_content"`
+	PostContent string `json:"post_content"`
 }
+
+type CreatePostFrontend struct {
+	UserID      string  `json:"user_id"`
+	PostTitle   string `json:"post_title"`
+	PostContent string `json:"post_content"`
+}
+
 
 type Repository interface {
 	CreatePost(ctx context.Context, req sqlc.CreatePostParams) (*sqlc.Post, error)
